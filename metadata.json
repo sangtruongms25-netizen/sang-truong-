@@ -1,0 +1,6 @@
+{
+  "name": "sang truong ",
+  "description": "Upload an image of a person and generate a new, highly customized image by combining options from four categories: Pose, Expression, Style, and Camera Angle.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

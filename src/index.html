@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Pose Generator</title>
+    <link rel="stylesheet" href="index.css" />
+    <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai",
+    "safevalues/dom": "https://cdn.jsdelivr.net/npm/safevalues@1.2.0/dist/mjs/dom/index.js",
+    "safevalues": "https://cdn.jsdelivr.net/npm/safevalues@1.2.0/dist/mjs/index.js",
+    "safevalues/": "https://aistudiocdn.com/safevalues@^1.2.0/"
+  }
+}
+</script>
+  </head>
+  <body>
+    <header>
+      <h1>AI Image Generator</h1>
+      <p>Upload a photo, select your options, and generate a unique, customized image.</p>
+    </header>
+    <main>
+      <div class="upload-section">
+        <div id="image-uploader" class="image-uploader" tabindex="0" role="button" aria-label="Upload an image">
+          <img id="image-preview" src="" alt="Image preview" class="hidden" />
+          <div id="upload-placeholder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-45v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h48.3c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7z"/><path d="M24.1 2.3c.6-.6 1.5-.6 2.1 0l11.6 11.6c.6.6.6 1.5 0 2.1s-1.5.6-2.1 0l-9.1-9.1v27.2c0 .9-.7 1.7-1.7 1.7s-1.7-.7-1.7-1.7v-27.2l-9.1 9.1c-.6.6-1.5.6-2.1 0s-.6-1.5 0-2.1l11.6-11.6z"/></svg>
+            <p><strong>Choose a file</strong> or drag it here.</p>
+          </div>
+        </div>
+        <input type="file" id="file-input" accept="image/*" hidden />
+      </div>
+
+      <div class="controls-section">
+        <div class="control-group">
+            <label for="pose-select">Pose:</label>
+            <select id="pose-select">
+                <option value="standing confidently">Standing Confidently</option>
+                <option value="sitting thoughtfully on a chair">Sitting Thoughtfully</option>
+                <option value="leaning casually against a wall">Leaning Against Wall</option>
+                <option value="crouching, ready for action">Crouching</option>
+                <option value="mid-stride, walking forward">Walking Forward</option>
+                <option value="with arms crossed">Arms Crossed</option>
+                <option value="with hands on hips">Hands on Hips</option>
+                <option value="looking over the shoulder">Looking Over Shoulder</option>
+                <option value="reclining gracefully on a sofa">Reclining Gracefully</option>
+                <option value="one hand raised, as if gesturing">Gesturing with Hand</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="expression-select">Expression & Vibe:</label>
+            <select id="expression-select">
+                <option value="a joyful laugh">Joyful Laugh</option>
+                <option value="a serious and intense gaze">Serious & Intense</option>
+                <option value="a calm and serene smile">Calm & Serene</option>
+                <option value="a look of surprise">Surprised</option>
+                <option value="a thoughtful, pensive look">Thoughtful & Pensive</option>
+                <option value="a mischievous smirk">Mischievous Smirk</option>
+                <option value="a look of fierce determination">Fierce Determination</option>
+                <option value="daydreaming peacefully">Daydreaming Peacefully</option>
+                <option value="a curious and inquisitive expression">Curious & Inquisitive</option>
+                <option value="an expression of awe and wonder">Awe & Wonder</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="style-select">Action & Style:</label>
+            <select id="style-select">
+                <option value="with no specific action">Default</option>
+                <option value="energetically dancing">Dancing</option>
+                <option value="raising a hand to wave">Waving</option>
+                <option value="with dramatic, cinematic lighting">Cinematic Lighting</option>
+                <option value="in the style of a high-fashion magazine cover">Fashion Magazine Style</option>
+                <option value="holding a cup of coffee">Holding Coffee</option>
+                <option value="reading a book intently">Reading a Book</option>
+                <option value="in the style of a black and white noir film">Noir Film Style</option>
+                <option value="as a vibrant watercolor painting">Watercolor Style</option>
+                <option value="surrounded by a soft, glowing aura">Glowing Aura</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="camera-angle-select">Camera Angle:</label>
+            <select id="camera-angle-select">
+                <option value="from a straight-on eye-level angle">Eye-Level</option>
+                <option value="as a close-up on the face and shoulders">Close-Up</option>
+                <option value="as a medium full-body shot">Full Body</option>
+                <option value="from a low-angle, looking up for a dramatic effect">Dramatic Low-Angle</option>
+                <option value="from a high-angle, looking down for a unique perspective">High-Angle</option>
+                <option value="as an over-the-shoulder shot">Over-the-Shoulder</option>
+                <option value="with a slightly tilted Dutch angle for a dynamic feel">Dutch Angle</option>
+                <option value="as a wide shot, showing the subject in their environment">Wide Shot</option>
+                <option value="as a point-of-view (POV) shot">Point-of-View (POV)</option>
+                <option value="as an extreme close-up on the eyes">Extreme Close-Up (Eyes)</option>
+                <option value="from a worm's-eye view, looking straight up">Worm's-Eye View</option>
+                <option value="from a bird's-eye view, looking straight down">Bird's-Eye View</option>
+            </select>
+        </div>
+      </div>
+
+      <button id="generate-btn" disabled>Generate Image</button>
+
+      <div id="loading-indicator" class="hidden">
+        <div class="spinner"></div>
+        <p id="loading-message">Generating image... This may take a moment.</p>
+      </div>
+      
+      <div id="results-grid" class="results-grid"></div>
+    </main>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
